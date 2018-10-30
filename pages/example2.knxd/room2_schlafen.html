@@ -32,13 +32,13 @@
             {{ device.dimmer('light1', 'Decke', '6/1/1/1.001', '6/1/5/5.xxx') }}
             <table width="90%">
 	    <tr>
-                <td align="left" width="100px">&nbsp; {{ basic.switch('switch1', '6/1/21/1.001', 'light_light.svg', 'light_light.svg') }} </td>
+                <td align="left" width="100px">&nbsp; {{ basic.stateswitch('switch1', '6/1/21/1.001', 'icon', ['1', '0'], ['light_light.svg', 'light_light.svg'], '', ['icon1', 'icon0']) }} </td>
                 <td>Bett links</td>
             </tr>
             </table>
             <table width="90%">
             <tr>
-                <td align="left" width="100px">&nbsp; {{ basic.switch('switch2', '6/1/11/1.001', 'light_light.svg', 'light_light.svg') }} </td>
+                <td align="left" width="100px">&nbsp; {{ basic.stateswitch('switch2', '6/1/11/1.001', 'icon', ['1', '0'], ['light_light.svg', 'light_light.svg'], '', ['icon1', 'icon0']) }} </td>
                 <td>Bett rechts</td>
             </tr>
             </table>
@@ -52,7 +52,6 @@
     
     	<div data-role="collapsible" data-collapsed="false">
             <h3>Rollladen</h3>
-            {% import "widget_shutter.html" as shutter %}
 	    {{ shutter.two ('schlafen_sueden', 'Sueden', '6/2/1/1.001',  '6/2/2/1.001',  '6/2/4/5.001' ) }}
         </div>
 
@@ -64,7 +63,6 @@
 
         <div data-role="collapsible" data-collapsed="false">
             <h3>Rollladen</h3>
-            {% import "widget_shutter.html" as shutter %}
             {{ shutter.two ('schlafen_westen', 'Westen', '6/2/11/1.001', '6/2/12/1.001', '6/2/14/5.001', '' ) }}
         </div>
 
