@@ -5,6 +5,7 @@
  * @copyright   2012 - 2015
  * @license     GPL [http://www.gnu.de]
  * -----------------------------------------------------------------------------
+ * @default     driver_port            2121
  */
 
 
@@ -105,6 +106,10 @@ var io = {
 	open: function () {
 		io.socket = new WebSocket('ws://' + io.address + ':' + io.port + '/');
 		io.socket.onopen = function () {
+			// remove socket error notification on reconnect
+			if(io.socketErrorNotification != null)
+				notify.remove(io.socketErrorNotification);
+
 			io.send({'cmd': 'proto', 'ver': io.version});
 			io.monitor();
 		};
@@ -159,7 +164,8 @@ var io = {
 			}
 		};
 		io.socket.onerror = function (error) {
-			notify.error('Driver: DomotiGa', 'Could not connect to the DomotiGa server!<bre >?Websocket error: ' + error.data + '.');
+			if(io.socketErrorNotification == null || !notify.exists(io.socketErrorNotification))
+				io.socketErrorNotification = notify.error('Driver: DomotiGa', 'Could not connect to the DomotiGa server!<bre >?Websocket error: ' + error.data + '.');
 		};
 		io.socket.onclose = function () {
 			notify.error('Driver: DomotiGa', 'No connection with the DomotiGa server!');

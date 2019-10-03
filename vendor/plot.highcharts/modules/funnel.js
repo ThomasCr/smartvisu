@@ -1,12 +1,14 @@
 /*
- 
- Highcharts funnel module, Beta
+ Highcharts JS v6.2.0 (2018-10-17)
+ Highcharts funnel module
 
- (c) 2010-2012 Torstein Hønsi
+ (c) 2010-2018 Torstein Honsi
 
  License: www.highcharts.com/license
 */
-(function(d){var u=d.getOptions().plotOptions,p=d.seriesTypes,D=d.merge,B=function(){},z=d.each;u.funnel=D(u.pie,{center:["50%","50%"],width:"90%",neckWidth:"30%",height:"100%",neckHeight:"25%",dataLabels:{connectorWidth:1,connectorColor:"#606060"},size:!0,states:{select:{color:"#C0C0C0",borderColor:"#000000",shadow:!1}}});p.funnel=d.extendClass(p.pie,{type:"funnel",animate:B,translate:function(){var a=function(k,a){return/%$/.test(k)?a*parseInt(k,10)/100:parseInt(k,10)},g=0,e=this.chart,f=e.plotWidth,
-e=e.plotHeight,h=0,c=this.options,C=c.center,b=a(C[0],f),d=a(C[0],e),p=a(c.width,f),i,q,j=a(c.height,e),r=a(c.neckWidth,f),s=a(c.neckHeight,e),v=j-s,a=this.data,w,x,u=c.dataLabels.position==="left"?1:0,y,m,A,n,l,t,o;this.getWidthAt=q=function(k){return k>j-s||j===s?r:r+(p-r)*((j-s-k)/(j-s))};this.getX=function(k,a){return b+(a?-1:1)*(q(k)/2+c.dataLabels.distance)};this.center=[b,d,j];this.centerX=b;z(a,function(a){g+=a.y});z(a,function(a){o=null;x=g?a.y/g:0;m=d-j/2+h*j;l=m+x*j;i=q(m);y=b-i/2;A=y+
-i;i=q(l);n=b-i/2;t=n+i;m>v?(y=n=b-r/2,A=t=b+r/2):l>v&&(o=l,i=q(v),n=b-i/2,t=n+i,l=v);w=["M",y,m,"L",A,m,t,l];o&&w.push(t,o,n,o);w.push(n,l,"Z");a.shapeType="path";a.shapeArgs={d:w};a.percentage=x*100;a.plotX=b;a.plotY=(m+(o||l))/2;a.tooltipPos=[b,a.plotY];a.slice=B;a.half=u;h+=x});this.setTooltipPoints()},drawPoints:function(){var a=this,g=a.options,e=a.chart.renderer;z(a.data,function(f){var h=f.graphic,c=f.shapeArgs;h?h.animate(c):f.graphic=e.path(c).attr({fill:f.color,stroke:g.borderColor,"stroke-width":g.borderWidth}).add(a.group)})},
-drawDataLabels:function(){var a=this.data,g=this.options.dataLabels.distance,e,f,h,c=a.length,d,b;for(this.center[2]-=2*g;c--;)h=a[c],f=(e=h.half)?1:-1,b=h.plotY,d=this.getX(b,e),h.labelPos=[0,b,d+(g-5)*f,b,d+g*f,b,e?"right":"left",0];p.pie.prototype.drawDataLabels.call(this)}})})(Highcharts);
+(function(a){"object"===typeof module&&module.exports?module.exports=a:"function"===typeof define&&define.amd?define(function(){return a}):a(Highcharts)})(function(a){(function(a){var p=a.seriesType,D=a.seriesTypes,H=a.noop,E=a.pick,I=a.each;p("funnel","pie",{animation:!1,center:["50%","50%"],width:"90%",neckWidth:"30%",height:"100%",neckHeight:"25%",reversed:!1,size:!0},{animate:H,translate:function(){var d=function(b,a){return/%$/.test(b)?a*parseInt(b,10)/100:parseInt(b,10)},a=0,f=this.chart,e=
+this.options,c=e.reversed,v=e.ignoreHiddenPoint,t=f.plotWidth,f=f.plotHeight,q=0,p=e.center,g=d(p[0],t),r=d(p[1],f),D=d(e.width,t),k,w,l=d(e.height,f),x=d(e.neckWidth,t),F=d(e.neckHeight,f),y=r-l/2+l-F,d=this.data,A,B,E="left"===e.dataLabels.position?1:0,C,m,G,u,h,z,n;this.getWidthAt=w=function(b){var a=r-l/2;return b>y||l===F?x:x+(D-x)*(1-(b-a)/(l-F))};this.getX=function(b,a,d){return g+(a?-1:1)*(w(c?2*r-b:b)/2+d.labelDistance)};this.center=[g,r,l];this.centerX=g;I(d,function(b){v&&!1===b.visible||
+(a+=b.y)});I(d,function(b){n=null;B=a?b.y/a:0;m=r-l/2+q*l;h=m+B*l;k=w(m);C=g-k/2;G=C+k;k=w(h);u=g-k/2;z=u+k;m>y?(C=u=g-x/2,G=z=g+x/2):h>y&&(n=h,k=w(y),u=g-k/2,z=u+k,h=y);c&&(m=2*r-m,h=2*r-h,null!==n&&(n=2*r-n));A=["M",C,m,"L",G,m,z,h];null!==n&&A.push(z,n,u,n);A.push(u,h,"Z");b.shapeType="path";b.shapeArgs={d:A};b.percentage=100*B;b.plotX=g;b.plotY=(m+(n||h))/2;b.tooltipPos=[g,b.plotY];b.slice=H;b.half=E;v&&!1===b.visible||(q+=B)})},sortByAngle:function(a){a.sort(function(a,d){return a.plotY-d.plotY})},
+drawDataLabels:function(){var a=this.data,p=this.options.dataLabels.distance,f,e,c,v=a.length,t,q;for(this.center[2]-=2*p;v--;)c=a[v],e=(f=c.half)?1:-1,q=c.plotY,c.labelDistance=E(c.options.dataLabels&&c.options.dataLabels.distance,p),this.maxLabelDistance=Math.max(c.labelDistance,this.maxLabelDistance||0),t=this.getX(q,f,c),c.labelPos=[0,q,t+(c.labelDistance-5)*e,q,t+c.labelDistance*e,q,f?"right":"left",0];D.pie.prototype.drawDataLabels.call(this)}});p("pyramid","funnel",{neckWidth:"0%",neckHeight:"0%",
+reversed:!0})})(a)});
+//# sourceMappingURL=funnel.js.map

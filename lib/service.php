@@ -92,12 +92,13 @@ class service
 		}
 		else
 		{
-			header("HTTP/1.0 601 smartVISU Service Error");
+			header("HTTP/1.0 500 smartVISU Service Error");
 			$ret = $this->error;
 		}
 
 		$this->debug($ret, "data");
 
+		header('Content-Type: text/json');
 		return json_encode($ret);
 	}
 
@@ -108,14 +109,14 @@ class service
 	{
 		if ($this->debug)
 		{
-			echo "<pre>\n";
+			echo '/*'.str_repeat("*", 78)."\n";
 			if ($title)
 			{
 				echo $title."\n";
 				echo str_repeat("-", 80)."\n";
 			}
 			print_r($text);
-			echo "\n</pre>";
+			echo "\n".str_repeat("*", 78).'*/'."\n\n";
 		}
 	}
 }

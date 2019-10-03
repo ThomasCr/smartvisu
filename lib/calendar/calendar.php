@@ -10,7 +10,8 @@
 
 
 require_once const_path_system.'service.php';
-
+require_once const_path_system.'calendar/ICal/ICal.php';
+require_once const_path_system.'calendar/ICal/Event.php';
 
 /**
  * This class is the base class of all services
@@ -18,6 +19,17 @@ require_once const_path_system.'service.php';
 class calendar extends service
 {
 	var $count = 1;
+	var $calendar_names = array('');
+
+	var $url;
+	
+	public function __construct($request)
+	{
+		if(!function_exists('mb_get_info') && !($this instanceof calendar_offline))
+			$this->error('Calendar service', 'Calendar services require PHP mbstring extension.');
+
+		parent::__construct($request);
+	}
 
 	/**
 	 * initialization of some parameters
@@ -27,48 +39,46 @@ class calendar extends service
 		parent::init($request);
 
 		$this->count = $request['count'];
+		$this->calendar_names = preg_split('/[\s,]+/m', strtolower($request['calendar']));
+		$this->url = config_calendar_url;
 	}
 
-	/**
-	 * prepare the data
-	 */
-	public function prepare()
+	protected function addData($line)
 	{
-		foreach ($this->data as $id => $ds)
-		{
-			$start = strtotime($ds['start']);
-			$end = strtotime($ds['end']);
+		// find greatest index which has a lower date
+		// (beginning on highest index because of greater chance of having a later date)
+		for($i = count($this->data)-1; $i >= 0; $i--) {
+			if($this->data[$i]['start'] < $line['start'] || $this->data[$i]['start'] == $line['start'] && $this->data[$i]['end'] < $line['end'])
+				break;
+		}
 
-			$this->data[$id]['starttime'] = transdate('time', $start);
-			$this->data[$id]['endtime'] = transdate('time', $end);
-
-			if (date('Y-m-d', $start) == date('Y-m-d', $end))
-				$this->data[$id]['period'] = transdate('short', $start).' - '.date('H:i', $end);
-			else
-				$this->data[$id]['period'] = transdate('short', $start).' - '.transdate('short', $end);
-
-			$this->data[$id]['weekday'] = transdate('l', $start);
-
-			// content
-			$tags = null;
-
-			if ($this->data[$id]['icon'] == '')
-				$this->data[$id]['icon'] = 'pages/base/pics/trans.png';
-
-			preg_match_all('#@(.+?)\W+(.*)#i', $this->data[$id]['content'], $tags);
-			foreach ($tags[0] as $nr => $hit)
-			{
-				$tag = trim($tags[1][$nr]);
-				if ($tag == 'icon')
-				{
-					if (is_file(const_path.$tags[2][$nr]))
-						$this->data[$id][$tag] = $tags[2][$nr];
-				}
-				elseif ($tag == 'color')
-					$this->data[$id][$tag] = '#'.trim($tags[2][$nr]);
-			}
+		if($this->count > $i+1) {
+			// insert new line after found index
+			array_splice($this->data, $i+1, 0, array($line));
+			// reduce size to max result size
+			if(count($this->data) > $this->count)
+				array_pop($this->data);
 		}
 	}
+
+	protected function addFromIcs($ical, $calmetadata = array())
+	{
+		$events = $ical->eventsFromRange(false, '+1 year');
+		// output events as listj
+		foreach ($events as $event) {
+			$this->addData(array(
+				'start' => $ical->iCalDateToUnixTimestamp($event->dtstart),
+				'end' => $event->dtend != null ? $ical->iCalDateToUnixTimestamp($event->dtend) : $ical->iCalDateToUnixTimestamp($event->dtstart),
+				'title' => $event->summary,
+				'content' => str_replace("\\n", "\n", $event->description),
+				'where' => $event->location,
+				'calendarname' => $calmetadata['calendarname'] != '' ? $calmetadata['calendarname'] : $ical->calendarName(),
+				'calendardesc' => $calmetadata['calendardesc'] != '' ? $calmetadata['calendardesc'] : $ical->calendarDescription(),
+				'calendarcolor' => $calmetadata['calendarcolor'] != '' ? $calmetadata['calendarcolor'] : ""
+				//,'link' => ''
+			));
+		}
+  }
 
 }
 
