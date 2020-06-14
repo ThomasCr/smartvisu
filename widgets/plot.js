@@ -116,12 +116,12 @@ $.widget("sv.plot_period", $.sv.widget, {
 		this._super();
 
 		var ymin = [];
-		if (this.options.ymin) {
+		if (this.options.ymin != undefined) {
 			ymin = String(this.options.ymin).explode();
 		}
 
 		var ymax = [];
-		if (this.options.ymax) {
+		if (this.options.ymax != undefined) {
 			ymax = String(this.options.ymax).explode();
 		}
 
@@ -1347,7 +1347,7 @@ $.widget("sv.plot_temprose", $.sv.widget, {
 			name: label[0], pointPlacement: 'on'
 		};
 
-		if (this.items.length == 2 * count) {
+		if (this.items.length > count) {
 			plots[1] = {
 				name: label[1], pointPlacement: 'on',
 				className: 'shortdot'

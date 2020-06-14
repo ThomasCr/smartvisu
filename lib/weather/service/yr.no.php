@@ -28,8 +28,7 @@ class weather_yr extends weather
 		// api call 
 		$cache = new class_cache('yr.no_'.substr(strrchr($this->location, '/'), 1).'.xml');
 
-                if ($cache->hit($this->cache_duration_minutes))
-
+		if ($cache->hit($this->cache_duration_minutes))
 			$content = $cache->read();
 		else
 		{
@@ -68,12 +67,10 @@ class weather_yr extends weather
 				$this->data['current']['icon'] = $this->icon((string)$day->symbol->attributes()->number, $this->icon_sm);
 				$this->data['current']['temp'] = (float)$day->temperature->attributes()->value.'&deg;C';
 				$this->data['current']['more'] = (int)$day->pressure->attributes()->value.' hPa';
-				$i++;
 			}
-
-			if ($i < 5 and $day->attributes()->period == 2)
+			
+			if ($i < 4 and $day->attributes()->period == 2)
 			{
-
 				$this->data['forecast'][$i]['date'] = (string)$day->attributes()->from;
 				$this->data['forecast'][$i]['conditions'] = translate((string)$day->symbol->attributes()->name, 'yr.no');
 				$this->data['forecast'][$i]['wind'] = translate((string)$day->windSpeed->attributes()->name.' from '.(string)$day->windDirection->attributes()->code, 'yr.no').$windspeed;
@@ -82,6 +79,7 @@ class weather_yr extends weather
 				$this->data['forecast'][$i]['more'] = (int)$day->pressure->attributes()->value.' hPa';
 				$i++;
 			}
+
 		}
 
 	}

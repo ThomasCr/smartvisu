@@ -1,13 +1,12 @@
 /**
  * -----------------------------------------------------------------------------
  * @package     smartVISU
- * @author      Martin Gleiß
+ * @author      Martin Gleiss
  * @copyright   2012 - 2015
  * @license     GPL [http://www.gnu.de]
  * -----------------------------------------------------------------------------
  * @hide        driver_address
  * @hide        driver_port
- * @hide        driver_realtime
  * @hide        driver_autoreconnect
  */
 
@@ -18,8 +17,8 @@
  */
 var io = {
 
-	// the adress
-	adress: '',
+	// the address
+	address: '',
 
 	// the port
 	port: '',
@@ -103,7 +102,7 @@ var io = {
 	 */
 	loop: function () {
 		if (widget.listeners().length) {
-			io.timer = setTimeout('io.loop(); io.all();', 1000);
+			io.timer = setTimeout('io.loop(); io.all();', 5000);
 		}
 	},
 
